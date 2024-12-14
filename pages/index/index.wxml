@@ -1,0 +1,74 @@
+<!--index.wxml-->
+<view class="container">
+  <!-- 顶部导航栏 -->
+  <view class="header">
+    <view class="header-title">今日热点</view>
+    <scroll-view class="header-tabs" scroll-x enable-flex>
+      <view class="tab {{currentTab === 'all' ? 'active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
+      <view class="tab {{currentTab === 'tech' ? 'active' : ''}}" bindtap="switchTab" data-tab="tech">科技</view>
+      <view class="tab {{currentTab === 'finance' ? 'active' : ''}}" bindtap="switchTab" data-tab="finance">财经</view>
+      <view class="tab {{currentTab === 'life' ? 'active' : ''}}" bindtap="switchTab" data-tab="life">生活</view>
+      <view class="tab {{currentTab === 'entertainment' ? 'active' : ''}}" bindtap="switchTab" data-tab="entertainment">娱乐</view>
+      <view class="tab {{currentTab === 'sports' ? 'active' : ''}}" bindtap="switchTab" data-tab="sports">体育</view>
+    </scroll-view>
+  </view>
+
+  <!-- 瀑布流内容区 -->
+  <scroll-view 
+    class="waterfall" 
+    scroll-y 
+    enable-flex
+    refresher-enabled="{{true}}"
+    refresher-triggered="{{isRefreshing}}"
+    bindrefresherrefresh="onRefresh"
+    bindscrolltolower="onLoadMore">
+    
+    <view class="waterfall-column">
+      <block wx:for="{{leftList}}" wx:key="id">
+        <view class="article-card" bindtap="viewArticle" data-id="{{item.id}}">
+          <view class="article-image-wrapper">
+            <image class="article-image" src="{{item.coverUrl}}" mode="widthFix" lazy-load/>
+          </view>
+          <view class="article-info">
+            <text class="article-title">{{item.title}}</text>
+            <view class="article-meta">
+              <image class="account-avatar" src="{{item.accountAvatar}}" mode="aspectFill"/>
+              <text class="account-name">{{item.accountName}}</text>
+              <view class="meta-right">
+                <text class="read-count">{{item.readCount}}</text>
+                <text class="publish-time">{{item.publishTime}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <view class="waterfall-column">
+      <block wx:for="{{rightList}}" wx:key="id">
+        <view class="article-card" bindtap="viewArticle" data-id="{{item.id}}">
+          <view class="article-image-wrapper">
+            <image class="article-image" src="{{item.coverUrl}}" mode="widthFix" lazy-load/>
+          </view>
+          <view class="article-info">
+            <text class="article-title">{{item.title}}</text>
+            <view class="article-meta">
+              <image class="account-avatar" src="{{item.accountAvatar}}" mode="aspectFill"/>
+              <text class="account-name">{{item.accountName}}</text>
+              <view class="meta-right">
+                <text class="read-count">{{item.readCount}}</text>
+                <text class="publish-time">{{item.publishTime}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </scroll-view>
+
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{isLoading}}">
+    <view class="loading-icon"></view>
+    <text class="loading-text">正在加载更多内容...</text>
+  </view>
+</view>

@@ -1,0 +1,145 @@
+/**app.wxss**/
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #f6f6f6;
+}
+
+/* 顶部导航栏样式 */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #fff;
+  padding: 10rpx 20rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
+}
+
+.header-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 16rpx;
+  padding-left: 16rpx;
+}
+
+.header-tabs {
+  white-space: nowrap;
+  display: flex;
+}
+
+.tab {
+  display: inline-block;
+  padding: 12rpx 24rpx;
+  margin: 0 16rpx;
+  font-size: 28rpx;
+  color: #666;
+  border-radius: 26rpx;
+}
+
+.tab.active {
+  color: #07c160;
+  background: rgba(7, 193, 96, 0.1);
+}
+
+/* 瀑布流样式 */
+.waterfall {
+  margin-top: 180rpx;
+  padding: 20rpx;
+  display: flex;
+  justify-content: space-between;
+}
+
+.waterfall-column {
+  width: 48%;
+}
+
+.article-card {
+  background: #fff;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.1);
+}
+
+.article-image-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.article-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.article-info {
+  padding: 16rpx;
+}
+
+.article-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  line-height: 1.4;
+  margin-bottom: 12rpx;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.article-meta {
+  display: flex;
+  align-items: center;
+  font-size: 24rpx;
+  color: #999;
+}
+
+.account-avatar {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  margin-right: 8rpx;
+}
+
+.account-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta-right {
+  display: flex;
+  align-items: center;
+}
+
+.read-count {
+  margin-right: 16rpx;
+}
+
+/* 加载状态样式 */
+.loading-state {
+  text-align: center;
+  padding: 30rpx;
+  color: #999;
+  font-size: 24rpx;
+}
+
+.loading-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin: 0 auto 10rpx;
+  animation: rotate 1s linear infinite;
+  border: 4rpx solid #f3f3f3;
+  border-top: 4rpx solid #07c160;
+  border-radius: 50%;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+} 
