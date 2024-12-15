@@ -1,0 +1,66 @@
+.loading-state {
+  text-align: center;
+  padding: 30rpx;
+  color: #999;
+  font-size: 24rpx;
+}
+
+.loading-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin: 0 auto 10rpx;
+  animation: rotate 1s linear infinite;
+  border: 4rpx solid #f3f3f3;
+  border-top: 4rpx solid #07c160;
+  border-radius: 50%;
+}
+
+/* 骨架屏动画 */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton.article-card {
+  height: 360rpx;
+}
+
+.skeleton.article-image-wrapper {
+  height: 200rpx;
+}
+
+.skeleton.article-title {
+  height: 32rpx;
+  margin: 16rpx 0;
+  width: 80%;
+}
+
+.skeleton.article-meta {
+  height: 24rpx;
+  width: 60%;
+}
+
+.back-to-top {
+  position: fixed;
+  right: 30rpx;
+  bottom: 60rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 40rpx;
+  z-index: 100;
+} 

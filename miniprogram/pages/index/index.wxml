@@ -23,52 +23,105 @@
     bindrefresherrefresh="onRefresh"
     bindscrolltolower="onLoadMore">
     
-    <view class="waterfall-column">
-      <block wx:for="{{leftList}}" wx:key="id">
-        <view class="article-card" bindtap="viewArticle" data-id="{{item.id}}">
-          <view class="article-image-wrapper">
-            <image class="article-image" src="{{item.coverUrl}}" mode="widthFix" lazy-load/>
-          </view>
+    <!-- 骨架屏 -->
+    <block wx:if="{{isLoading && leftList.length === 0}}">
+      <view class="waterfall-column">
+        <view class="article-card skeleton" wx:for="{{[1,2,3]}}" wx:key="*this">
+          <view class="article-image-wrapper skeleton"></view>
           <view class="article-info">
-            <text class="article-title">{{item.title}}</text>
-            <view class="article-meta">
-              <image class="account-avatar" src="{{item.accountAvatar}}" mode="aspectFill"/>
-              <text class="account-name">{{item.accountName}}</text>
-              <view class="meta-right">
-                <text class="read-count">{{item.readCount}}</text>
-                <text class="publish-time">{{item.publishTime}}</text>
+            <view class="article-title skeleton"></view>
+            <view class="article-meta skeleton"></view>
+          </view>
+        </view>
+      </view>
+      <view class="waterfall-column">
+        <view class="article-card skeleton" wx:for="{{[1,2,3]}}" wx:key="*this">
+          <view class="article-image-wrapper skeleton"></view>
+          <view class="article-info">
+            <view class="article-title skeleton"></view>
+            <view class="article-meta skeleton"></view>
+          </view>
+        </view>
+      </view>
+    </block>
+    
+    <!-- 实际内容 -->
+    <block wx:else>
+      <view class="waterfall-column">
+        <block wx:for="{{leftList}}" wx:key="_id">
+          <view class="article-card" bindtap="viewArticle" data-id="{{item._id}}">
+            <view class="article-image-wrapper">
+              <image 
+                class="article-image" 
+                src="{{item.coverUrl}}" 
+                mode="widthFix" 
+                lazy-load
+                loading="fade"
+                show-menu-by-longpress
+                binderror="handleImageError"
+                data-index="{{index}}"
+                data-type="{{index % 2 === 0 ? 'left' : 'right'}}"
+              />
+            </view>
+            <view class="article-info">
+              <text class="article-title">{{item.title}}</text>
+              <view class="article-meta">
+                <image class="account-avatar" src="{{item.accountAvatar}}" mode="aspectFill"/>
+                <text class="account-name">{{item.accountName}}</text>
+                <view class="meta-right">
+                  <text class="read-count">{{item.readCount}}</text>
+                  <text class="publish-time">{{item.publishTime}}</text>
+                </view>
               </view>
             </view>
           </view>
-        </view>
-      </block>
-    </view>
+        </block>
+      </view>
 
-    <view class="waterfall-column">
-      <block wx:for="{{rightList}}" wx:key="id">
-        <view class="article-card" bindtap="viewArticle" data-id="{{item.id}}">
-          <view class="article-image-wrapper">
-            <image class="article-image" src="{{item.coverUrl}}" mode="widthFix" lazy-load/>
-          </view>
-          <view class="article-info">
-            <text class="article-title">{{item.title}}</text>
-            <view class="article-meta">
-              <image class="account-avatar" src="{{item.accountAvatar}}" mode="aspectFill"/>
-              <text class="account-name">{{item.accountName}}</text>
-              <view class="meta-right">
-                <text class="read-count">{{item.readCount}}</text>
-                <text class="publish-time">{{item.publishTime}}</text>
+      <view class="waterfall-column">
+        <block wx:for="{{rightList}}" wx:key="_id">
+          <view class="article-card" bindtap="viewArticle" data-id="{{item._id}}">
+            <view class="article-image-wrapper">
+              <image 
+                class="article-image" 
+                src="{{item.coverUrl}}" 
+                mode="widthFix" 
+                lazy-load
+                loading="fade"
+                show-menu-by-longpress
+                binderror="handleImageError"
+                data-index="{{index}}"
+                data-type="{{index % 2 === 0 ? 'left' : 'right'}}"
+              />
+            </view>
+            <view class="article-info">
+              <text class="article-title">{{item.title}}</text>
+              <view class="article-meta">
+                <image class="account-avatar" src="{{item.accountAvatar}}" mode="aspectFill"/>
+                <text class="account-name">{{item.accountName}}</text>
+                <view class="meta-right">
+                  <text class="read-count">{{item.readCount}}</text>
+                  <text class="publish-time">{{item.publishTime}}</text>
+                </view>
               </view>
             </view>
           </view>
-        </view>
-      </block>
-    </view>
+        </block>
+      </view>
+    </block>
   </scroll-view>
 
   <!-- 加载状态 -->
   <view class="loading-state" wx:if="{{isLoading}}">
     <view class="loading-icon"></view>
     <text class="loading-text">正在加载更多内容...</text>
+  </view>
+  <view class="loading-state" wx:if="{{!isLoading && !hasMore}}">
+    <text class="loading-text">没有更多内容了</text>
+  </view>
+
+  <!-- 返回顶部按钮 -->
+  <view class="back-to-top" bindtap="backToTop" wx:if="{{showBackTop}}">
+    <text class="iconfont icon-top"></text>
   </view>
 </view>

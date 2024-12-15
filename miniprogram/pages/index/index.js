@@ -1,4 +1,7 @@
 // pages/index/index.js
+const app = getApp()
+const { isValidImageUrl, getDefaultImage } = require('../../utils/image');
+
 Page({
 
   /**
@@ -6,26 +9,36 @@ Page({
    */
   data: {
     currentTab: 'all',
+    tabs: [
+      { id: 'all', name: '全部' },
+      { id: 'news', name: '要闻' },
+      { id: 'tech', name: '科技' },
+      { id: 'finance', name: '财经' },
+      { id: 'sports', name: '体育' },
+      { id: 'ent', name: '娱乐' }
+    ],
     leftList: [],
     rightList: [],
     page: 1,
     size: 10,
     isLoading: false,
     isRefreshing: false,
-    hasMore: true
+    hasMore: true,
+    windowHeight: 0,
+    showBackTop: false,
+    scrollTop: 0
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad() {
-    // 初始化云环境
-    wx.cloud.init({
-      env: 'cloud1-8gfvv1gf3c3f0d0f',
-      traceUser: true
+    // 获取窗口高度
+    const { windowHeight } = app.globalData.systemInfo || wx.getWindowInfo()
+    this.setData({
+      windowHeight
     })
     
-    // 加载文章列表
     this.getArticles(true)
   },
 
@@ -61,21 +74,33 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh() {
-
+    this.getArticles(true).then(() => {
+      wx.stopPullDownRefresh()
+    })
   },
 
   /**
    * 页面上拉触底事件的处理函数
    */
   onReachBottom() {
-
+    this.onLoadMore()
   },
 
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage() {
+    return {
+      title: '今日热点',
+      path: '/pages/index/index'
+    }
+  },
 
+  // 分享到朋友圈
+  onShareTimeline() {
+    return {
+      title: '今日热点'
+    }
   },
 
   // 获取文章列表
@@ -126,11 +151,24 @@ Page({
             hasMore: this.data.page * this.data.size < total
           })
         }
+      } else {
+        throw new Error(result.message)
       }
     } catch (error) {
+      console.error('加载文章失败:', error)
       wx.showToast({
         title: '加载失败',
         icon: 'none'
+      })
+      // 添加重试按钮
+      wx.showModal({
+        title: '加载失败',
+        content: '是否重试？',
+        success: (res) => {
+          if (res.confirm) {
+            this.getArticles(refresh)
+          }
+        }
       })
     } finally {
       this.setData({ 
@@ -166,5 +204,49 @@ Page({
       page: this.data.page + 1
     })
     await this.getArticles()
+  },
+
+  // 查看文章详情
+  viewArticle(e) {
+    const { id } = e.currentTarget.dataset
+    console.log('点击文章:', id)
+    wx.navigateTo({
+      url: `/pages/article/article?id=${id}`
+    })
+  },
+
+  // 监听滚动
+  onPageScroll(e) {
+    const { scrollTop } = e
+    this.setData({
+      scrollTop,
+      showBackTop: scrollTop > 300
+    })
+  },
+
+  // 返回顶部
+  backToTop() {
+    wx.pageScrollTo({
+      scrollTop: 0,
+      duration: 300
+    })
+  },
+
+  // 处理图片加载错误
+  handleImageError(e) {
+    const { index, type } = e.currentTarget.dataset
+    const defaultImage = getDefaultImage('cover')
+    
+    if (type === 'left') {
+      const key = `leftList[${index}].coverUrl`
+      this.setData({
+        [key]: defaultImage
+      })
+    } else {
+      const key = `rightList[${index}].coverUrl`
+      this.setData({
+        [key]: defaultImage
+      })
+    }
   }
 })

@@ -1,54 +1,57 @@
 const cloud = require('wx-server-sdk')
+
 cloud.init({
   env: cloud.DYNAMIC_CURRENT_ENV
 })
 
 const db = cloud.database()
 const _ = db.command
-const $ = db.command.aggregate
 
+// 获取文章列表
 exports.main = async (event, context) => {
   const { category = 'all', page = 1, size = 10 } = event
+  const skip = (page - 1) * size
   
   try {
-    const collection = db.collection('newsnetease-articles')
     let query = {}
     
-    // 构建查询条件
+    // 添加分类过滤
     if (category !== 'all') {
-      query.category = category
+      query.categoryId = category
     }
-    query.status = 1
-    
-    // 计算分页
-    const skip = (page - 1) * size
-    
-    // 查询文章列表
-    const { data } = await collection
+
+    console.log('查询条件:', query)
+
+    // 获取总数
+    const countResult = await db.collection('newsnetease-articles')
       .where(query)
-      .orderBy('publishTime', 'desc')
+      .count()
+
+    console.log('文章总数:', countResult.total)
+
+    // 获取列表
+    const { data } = await db.collection('newsnetease-articles')
+      .where(query)
+      .orderBy('createTime', 'desc')
       .skip(skip)
       .limit(size)
       .get()
-      
-    // 获取总数
-    const { total } = await collection
-      .where(query)
-      .count()
-      
+
+    console.log('获取到的文章:', data.length)
+    console.log('第一篇文章:', data[0])
+
     return {
       code: 0,
       data: {
         list: data,
-        total,
-        page,
-        size
+        total: countResult.total
       }
     }
   } catch (error) {
+    console.error('获取文章列表失败:', error)
     return {
       code: 500,
-      message: '查询失败'
+      message: '获取文章列表失败'
     }
   }
 } 

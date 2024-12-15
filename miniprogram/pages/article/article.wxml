@@ -1,0 +1,44 @@
+<view class="container">
+  <view class="loading-state" wx:if="{{isLoading}}">
+    <view class="loading-icon"></view>
+    <text>加载中...</text>
+  </view>
+
+  <block wx:if="{{!isLoading && article}}">
+    <view class="article-header">
+      <text class="article-title">{{article.title}}</text>
+      <view class="article-meta">
+        <image class="account-avatar" src="{{article.accountAvatar}}" mode="aspectFill" binderror="handleImageError" data-type="avatar"/>
+        <text class="account-name">{{article.accountName}}</text>
+        <view class="meta-right">
+          <text class="read-count">{{article.readCount}} 阅读</text>
+          <text class="publish-time">{{article.publishTime}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="article-content">
+      <image 
+        class="article-cover" 
+        src="{{article.coverUrl}}" 
+        mode="widthFix"
+        lazy-load
+        show-menu-by-longpress
+        binderror="handleImageError"
+        data-type="cover"
+      />
+      <view class="article-summary" wx:if="{{article.summary}}">
+        {{article.summary}}
+      </view>
+      <text class="content-text" user-select>{{article.content}}</text>
+      <view class="article-source" wx:if="{{article.url}}">
+        <text>来源: {{article.accountName}}</text>
+        <text>原文链接: {{article.url}}</text>
+      </view>
+    </view>
+  </block>
+
+  <view class="error-state" wx:if="{{!isLoading && !article}}">
+    <text>文章不存在或已被删除</text>
+  </view>
+</view> 

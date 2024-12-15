@@ -1,0 +1,11 @@
+{
+  "timeout": 120,
+  "triggers": [
+    {
+      "name": "hourlyUpdate",
+      "type": "timer",
+      "config": "0 0 * * * * *"
+    }
+  ],
+  "memorySize": 256
+} 

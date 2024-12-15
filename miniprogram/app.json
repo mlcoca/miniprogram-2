@@ -1,7 +1,7 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/article/article"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -9,6 +9,6 @@
     "navigationBarTitleText": "今日热点",
     "navigationBarTextStyle": "black"
   },
-  "style": "v2",
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
 } 
