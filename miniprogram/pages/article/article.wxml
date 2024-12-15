@@ -33,9 +33,16 @@
       <text class="content-text" user-select>{{article.content}}</text>
       <view class="article-source" wx:if="{{article.url}}">
         <text>来源: {{article.accountName}}</text>
-        <text>原文链接: {{article.url}}</text>
+        <view class="source-link" bindtap="openSourceUrl">
+          <text class="link-text">查看原文</text>
+          <image class="link-icon" src="/images/external-link.png" mode="aspectFit"/>
+        </view>
       </view>
     </view>
+
+    <button class="float-share-btn" open-type="share">
+      <image class="share-icon" src="/images/share.png" mode="aspectFit"/>
+    </button>
   </block>
 
   <view class="error-state" wx:if="{{!isLoading && !article}}">

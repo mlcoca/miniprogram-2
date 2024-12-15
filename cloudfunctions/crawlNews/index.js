@@ -18,32 +18,32 @@ const CATEGORIES = {
   news: {
     id: '24hours',
     name: '要闻',
-    channel: 'news',
-    icon: DEFAULT_IMAGES.cover
+    channel: 'news'
   },
   tech: {
     id: 'tech',
     name: '科技',
-    channel: 'tech',
-    icon: DEFAULT_IMAGES.cover
+    channel: 'tech'
   },
   finance: {
     id: 'finance',
     name: '财经',
-    channel: 'finance',
-    icon: DEFAULT_IMAGES.cover
+    channel: 'finance'
   },
   sports: {
     id: 'sports',
     name: '体育',
-    channel: 'sports',
-    icon: DEFAULT_IMAGES.cover
+    channel: 'sports'
   },
   ent: {
     id: 'ent',
     name: '娱乐',
-    channel: 'ent',
-    icon: DEFAULT_IMAGES.cover
+    channel: 'ent'
+  },
+  life: {
+    id: 'house',
+    name: '生活',
+    channel: 'life'
   }
 }
 
@@ -52,6 +52,9 @@ async function getNewsList(category = 'news') {
   try {
     const channelConfig = CATEGORIES[category] || CATEGORIES.news
     const categoryName = channelConfig.name
+
+    // 添加日志输出
+    console.log(`正在获取${categoryName}新闻，频道ID: ${channelConfig.id}`)
 
     // 添加重试机制
     let retryCount = 3;
@@ -77,6 +80,14 @@ async function getNewsList(category = 'news') {
             'Pragma': 'no-cache'
           },
           timeout: 5000
+        }).catch(error => {
+          console.error(`请求${categoryName}新闻失败:`, {
+            url: error.config?.url,
+            params: error.config?.params,
+            status: error.response?.status,
+            data: error.response?.data
+          })
+          throw error
         })
 
         const { data } = response
@@ -86,7 +97,7 @@ async function getNewsList(category = 'news') {
 
         // 提取新闻数据
         const articles = data.data.list
-          .filter(news => news.title && news.url) // 过滤无效数据
+          .filter(news => news.title && news.url) // 滤无效数据
           .map(news => ({
             title: news.title.trim(),
             coverUrl: news.img || channelConfig.icon || DEFAULT_IMAGES.cover,
@@ -115,12 +126,19 @@ async function getNewsList(category = 'news') {
             `.trim().replace(/\n\s+/g, '\n')
           }))
 
+        // 添加结果日志
+        console.log(`获取${categoryName}新闻结果:`, {
+          total: articles.length,
+          firstTitle: articles[0]?.title,
+          lastTitle: articles[articles.length - 1]?.title
+        })
+
         return articles
       } catch (error) {
         lastError = error
         retryCount--
         if (retryCount > 0) {
-          console.log(`获取${categoryName}新闻失败，剩余重试次数：${retryCount}`)
+          console.log(`获取${categoryName}新闻失败，剩余试次数：${retryCount}`)
           await new Promise(resolve => setTimeout(resolve, 1000))
         }
       }
@@ -249,28 +267,43 @@ exports.main = async (event, context) => {
     const promises = categories.map(async category => {
       const categoryName = CATEGORIES[category].name
       console.log(`开始获取${categoryName}新闻...`)
-      const articles = await getNewsList(category)
-      console.log(`获取到${categoryName}文章数:`, articles.length)
       
-      if (articles.length > 0) {
-        const { successCount, failCount } = await saveToDatabase(articles)
+      try {
+        const articles = await getNewsList(category)
+        console.log(`获取到${categoryName}文章数:`, articles.length)
+        
+        if (articles.length > 0) {
+          const { successCount, failCount } = await saveToDatabase(articles)
+          return {
+            category,
+            result: {
+              name: categoryName,
+              total: articles.length,
+              success: successCount,
+              fail: failCount
+            }
+          }
+        }
         return {
           category,
           result: {
             name: categoryName,
-            total: articles.length,
-            success: successCount,
-            fail: failCount
+            total: 0,
+            success: 0,
+            fail: 0
           }
         }
-      }
-      return {
-        category,
-        result: {
-          name: categoryName,
-          total: 0,
-          success: 0,
-          fail: 0
+      } catch (error) {
+        console.error(`处理${categoryName}新闻失败:`, error)
+        return {
+          category,
+          result: {
+            name: categoryName,
+            total: 0,
+            success: 0,
+            fail: 0,
+            error: error.message
+          }
         }
       }
     })

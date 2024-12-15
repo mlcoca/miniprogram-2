@@ -116,4 +116,61 @@
   text-align: center;
   padding: 60rpx 0;
   color: #999;
+}
+
+/* 移除旧的分享按钮样式 */
+.share-buttons {
+  display: none;
+}
+
+/* 添加悬浮分享按钮样式 */
+.float-share-btn {
+  position: fixed;
+  right: 30rpx;
+  bottom: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #07c160;
+  border-radius: 50%;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.15);
+  z-index: 999;
+}
+
+.float-share-btn::after {
+  border: none;
+}
+
+.float-share-btn .share-icon {
+  width: 50rpx;
+  height: 50rpx;
+  /* 如果图标是深色的，可以添加滤镜使其变白 */
+  filter: brightness(0) invert(1);
+}
+
+/* 添加点击效果 */
+.float-share-btn:active {
+  transform: scale(0.95);
+  opacity: 0.9;
+}
+
+/* 添加原文链接样式 */
+.source-link {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 0;
+  color: #576b95;
+}
+
+.link-text {
+  margin-right: 8rpx;
+}
+
+.link-icon {
+  width: 24rpx;
+  height: 24rpx;
 } 

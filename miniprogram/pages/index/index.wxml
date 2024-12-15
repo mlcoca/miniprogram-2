@@ -124,4 +124,9 @@
   <view class="back-to-top" bindtap="backToTop" wx:if="{{showBackTop}}">
     <text class="iconfont icon-top"></text>
   </view>
+
+  <!-- 在页面底部添加 -->
+  <view class="back-top" wx:if="{{showBackTop}}" bindtap="backToTop">
+    <image class="back-top-icon" src="/images/back-top.png" mode="aspectFit"/>
+  </view>
 </view>

@@ -99,5 +99,29 @@ Page({
         'article.accountAvatar': defaultImage
       })
     }
+  },
+
+  // 打开原文链接
+  openSourceUrl() {
+    const { url } = this.data.article
+    if (url) {
+      wx.showModal({
+        title: '打开外部链接',
+        content: '将跳转到原文页面，是否继续？',
+        success: (res) => {
+          if (res.confirm) {
+            wx.setClipboardData({
+              data: url,
+              success: () => {
+                wx.showToast({
+                  title: '链接已复制',
+                  icon: 'success'
+                })
+              }
+            })
+          }
+        }
+      })
+    }
   }
 }) 

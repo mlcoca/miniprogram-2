@@ -15,7 +15,8 @@ Page({
       { id: 'tech', name: '科技' },
       { id: 'finance', name: '财经' },
       { id: 'sports', name: '体育' },
-      { id: 'ent', name: '娱乐' }
+      { id: 'ent', name: '娱乐' },
+      { id: 'life', name: '生活' }
     ],
     leftList: [],
     rightList: [],
